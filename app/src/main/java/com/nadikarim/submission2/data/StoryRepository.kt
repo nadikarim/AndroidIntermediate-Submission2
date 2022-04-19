@@ -3,6 +3,7 @@ package com.nadikarim.submission2.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -17,18 +18,18 @@ import com.nadikarim.submission2.data.model.stories.StoriesResponse
 import com.nadikarim.submission2.data.model.stories.Story
 import com.nadikarim.submission2.data.remote.ApiService
 import com.nadikarim.submission2.utils.RETROFIT_TAG
-import com.uk.tastytoasty.TastyToasty
-import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class StoryRepository(
-    private val quoteDatabase: StoryDatabase,
+class StoryRepository @Inject constructor(
+    private val storyDatabase: StoryDatabase,
     private val apiService: ApiService,
-    //private val preference: UserPreference
+    private val preference: UserPreference,
+    private val storyPagingSource: StoryPagingSource
     ) {
 
     private val _userLogin = MutableLiveData<LoginResult>()
@@ -44,17 +45,32 @@ class StoryRepository(
     val isLoading: LiveData<Boolean> = _isLoading
 
 
-    fun getStory(token: String): LiveData<PagingData<Story>> {
+
+    fun getStory(): LiveData<PagingData<Story>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 5
             ),
             pagingSourceFactory = {
-                StoryPagingSource(token, apiService)
+                storyPagingSource
             }
         ).liveData
     }
 
+
+
+
+    fun getSession(){
+        preference.getUser()
+    }
+
+    suspend fun setUser(user: UserSession) {
+        preference.setUser(user)
+    }
+
+    suspend fun logout() {
+        preference.logout()
+    }
 
 
     /*
@@ -82,6 +98,8 @@ class StoryRepository(
     }
 
      */
+
+
 
     fun loginUser(email: String, password: String) {
         _isLoading.value = true
@@ -156,16 +174,4 @@ class StoryRepository(
         })
     }
 
-    /*
-    fun getUserSession() = preference.getUser()
-
-    suspend fun setUser(user: UserSession) {
-        preference.setUser(user)
-    }
-
-    suspend fun logout()  {
-        preference.logout()
-    }
-
- */
 }

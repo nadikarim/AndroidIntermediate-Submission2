@@ -26,9 +26,8 @@ import java.io.File
 
 class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
-    private val viewModel by viewModels<AddStoryViewModel> {
-        ViewModelFactory.getInstance(this)
-    }
+    private val viewModel by viewModels<AddStoryViewModel>()
+    private val dataStoreViewModel by viewModels<DataStoreViewModel>()
     private lateinit var mLoginPreference: LoginPreference
     private lateinit var currentPhotoPath: String
 
@@ -149,12 +148,15 @@ class AddStoryActivity : AppCompatActivity() {
                 requestImageFile
             )
 
-
-            val token = "Bearer ${mLoginPreference.getUser().token}"
-            viewModel.addStory(token, imageMultipart, description)
-            viewModel.toastMessage.observe(this) {
-                TastyToasty.error(this@AddStoryActivity, it).show()
+            dataStoreViewModel.getSession().observe(this) {
+                viewModel.addStory(it.token, imageMultipart, description)
+                viewModel.toastMessage.observe(this) {
+                    TastyToasty.error(this@AddStoryActivity, it).show()
+                }
             }
+
+            //val token = "Bearer ${mLoginPreference.getUser().token}"
+
         } else {
             TastyToasty.success(this@AddStoryActivity, "Silahkan masukkan gambar terlebih dahulu.").show()
         }

@@ -1,15 +1,24 @@
 package com.nadikarim.submission2.data
 
+import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import com.nadikarim.submission2.data.model.UserSession
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-/*
-class UserPreference private constructor(private val dataStore: DataStore<Preferences>) {
+import javax.inject.Inject
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
+class UserPreference @Inject constructor(@ApplicationContext val context: Context) {
+
+    private val dataStore = context.dataStore
 
     fun getUser(): Flow<UserSession> {
         return dataStore.data.map { preferences ->
@@ -42,22 +51,12 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
     }
 
     companion object {
-        @Volatile
-        private var INSTANCE: UserPreference? = null
 
         private val NAME_KEY = stringPreferencesKey("name")
         private val TOKEN = stringPreferencesKey("email")
         private val USER_ID_KEY = stringPreferencesKey("password")
         private val LOGIN_STATE = booleanPreferencesKey("state")
 
-        fun getInstance(dataStore: DataStore<Preferences>): UserPreference {
-            return INSTANCE ?: synchronized(this) {
-                val instance = UserPreference(dataStore)
-                INSTANCE = instance
-                instance
-            }
-        }
     }
 }
 
- */

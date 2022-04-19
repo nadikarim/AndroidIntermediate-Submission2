@@ -5,28 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.nadikarim.submission2.data.model.stories.Story
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Database(
     entities = [Story::class],
     version = 1,
     exportSchema = false
 )
-abstract class StoryDatabase : RoomDatabase(){
-    companion object {
-        @Volatile
-        private var INSTANCE: StoryDatabase? = null
+abstract class StoryDatabase() : RoomDatabase(){
 
-        @JvmStatic
-        fun getDatabase(context: Context): StoryDatabase {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: Room.databaseBuilder(
-                    context.applicationContext,
-                    StoryDatabase::class.java, "quote_database"
-                )
-                    .fallbackToDestructiveMigration()
-                    .build()
-                    .also { INSTANCE = it }
-            }
-        }
-    }
+    abstract fun storyDao(): StoryDao
 }

@@ -11,13 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import com.nadikarim.submission2.databinding.ActivityRegisterBinding
 import com.nadikarim.submission2.ui.login.LoginActivity
-import com.nadikarim.submission2.utils.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
-    private val viewModel by viewModels<RegisterViewModel>{
-        ViewModelFactory.getInstance(this)
-    }
+    private val viewModel by viewModels<RegisterViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -24,4 +24,5 @@
     <string name="invalid_email">Invalid Email</string>
     <string name="image_logo">Image_Logo</string>
     <string name="from_camera">From camera</string>
+    <string name="retry">retry</string>
 </resources>

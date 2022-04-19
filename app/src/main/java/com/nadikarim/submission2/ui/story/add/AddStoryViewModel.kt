@@ -3,10 +3,13 @@ package com.nadikarim.submission2.ui.story.add
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.nadikarim.submission2.data.StoryRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import javax.inject.Inject
 
-class AddStoryViewModel(private val repository: StoryRepository): ViewModel() {
+@HiltViewModel
+class AddStoryViewModel @Inject constructor(private val repository: StoryRepository): ViewModel() {
 
     val toastMessage: LiveData<String> = repository.toastMessage
 

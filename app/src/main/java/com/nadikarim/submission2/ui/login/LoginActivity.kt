@@ -21,19 +21,20 @@ import com.nadikarim.submission2.data.model.UserSession
 import com.nadikarim.submission2.databinding.ActivityLoginBinding
 import com.nadikarim.submission2.ui.main.MainActivity
 import com.nadikarim.submission2.ui.register.RegisterActivity
+import com.nadikarim.submission2.utils.DataStoreViewModel
 import com.nadikarim.submission2.utils.LoginPreference
 import com.nadikarim.submission2.utils.SHARED_PREFERENCES
-import com.nadikarim.submission2.utils.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private val viewModelViewModel by viewModels<LoginViewModel> {
-        ViewModelFactory.getInstance(this)
-    }
-    private lateinit var pref: SharedPreferences
-    lateinit var userPref: LoginPreference
+    private val viewModelViewModel by viewModels<LoginViewModel>()
+    private val dataStoreViewModel by viewModels<DataStoreViewModel>()
+    //private lateinit var pref: SharedPreferences
+    //lateinit var userPref: LoginPreference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,17 +42,20 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.title = "Login"
 
-        setupPreference()
+        //setupPreference()
         setupViewModel()
         action()
         playAnimation()
 
     }
 
+    /*
     private fun setupPreference() {
         pref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
         userPref = LoginPreference(this)
     }
+
+     */
 
     private fun setupViewModel() {
         viewModelViewModel.isLoading.observe(this) { showLoading(it) }
@@ -103,8 +107,8 @@ class LoginActivity : AppCompatActivity() {
                             create()
                             show()
                         }
-                        //savedSession(UserSession(it.name, it.token, it.userId, true))
-                        saveSession(UserSession(it.name, it.token, it.userId, true))
+                        savedSession(UserSession(it.name, it.token, it.userId, true))
+                        //saveSession(UserSession(it.name, it.token, it.userId, true))
                     }
 
                 }
@@ -112,11 +116,14 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /*
     private fun saveSession(user: UserSession) {
         userPref.setUser(user)
     }
+     */
+
     private fun savedSession(user: UserSession) {
-        //viewModelViewModel.setSession(user)
+        dataStoreViewModel.setSession(user)
     }
 
     private fun playAnimation() {

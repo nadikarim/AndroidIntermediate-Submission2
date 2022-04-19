@@ -17,20 +17,24 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nadikarim.submission2.R
 import com.nadikarim.submission2.data.ListAdapter
+import com.nadikarim.submission2.data.LoadingStateAdapter
 import com.nadikarim.submission2.databinding.ActivityMainBinding
 import com.nadikarim.submission2.ui.login.LoginActivity
+import com.nadikarim.submission2.ui.maps.MapsActivity
 import com.nadikarim.submission2.ui.story.add.AddStoryActivity
-import com.nadikarim.submission2.utils.LoginPreference
-import com.nadikarim.submission2.utils.ViewModelFactory
+import com.nadikarim.submission2.utils.DataStoreViewModel
+import com.uk.tastytoasty.TastyToasty
+import dagger.hilt.android.AndroidEntryPoint
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel by viewModels<MainVIewModel> {
-        ViewModelFactory.getInstance(this)
-    }
+
+    private val viewModel by viewModels<MainVIewModel>()
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mLoginPreference: LoginPreference
+    private val dataStoreViewModel by viewModels<DataStoreViewModel>()
+    //private lateinit var mLoginPreference: LoginPreference
     private lateinit var adapter: ListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.title = "Home"
 
-        mLoginPreference = LoginPreference(this)
+        //mLoginPreference = LoginPreference(this)
         adapter = ListAdapter()
 
         setupViewModel()
@@ -58,54 +62,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun validate() {
-        if (!mLoginPreference.getUser().isLogin) {
-            val login = mLoginPreference.getUser().isLogin
-            Log.d("tag", login.toString())
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent,
-                ActivityOptionsCompat.makeSceneTransitionAnimation(this@MainActivity as Activity).toBundle()
-            )
-            finish()
-        }
-    }
-
-    private fun setupViewModel() {
-        viewModel.getStories(mLoginPreference.getUser().token)
-        /*
-        viewModel.listStory.observe(this) {
-            if (it != null) {
-                adapter.submitData(lifecycle, it)
-            }
-        }
-
-         */
-        viewModel.quote(mLoginPreference.getUser().token).observe(this) {
-            if (it != null) {
-                adapter.submitData(lifecycle, it)
-            }
-        }
-        viewModel.isLoading.observe(this) { showLoading(it) }
-        /*
-        viewModel.getUserSession().observe(this) {
-            if (it.isLogin) {
+        dataStoreViewModel.getSession().observe(this) {
+            if (!it.isLogin) {
+                TastyToasty.success(this, it.token).show()
+                Log.d("tag", it.token)
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent,
                     ActivityOptionsCompat.makeSceneTransitionAnimation(this@MainActivity as Activity).toBundle()
                 )
                 finish()
+            } else {
+                viewModel.story.observe(this) {
+                    adapter.submitData(lifecycle, it)
+                }
             }
         }
+    }
 
-         */
-        viewModel.getStories("Bearer ${mLoginPreference.getUser().token}")
+    private fun setupViewModel() {
+
+        viewModel.story.observe(this) {
+            adapter.submitData(lifecycle, it)
+        }
+
+        viewModel.isLoading.observe(this) { showLoading(it) }
     }
 
     private fun setRecyclerView() {
         binding.apply {
             rvStory.layoutManager = LinearLayoutManager(this@MainActivity)
             rvStory.setHasFixedSize(true)
-            rvStory.adapter = adapter
-
+            rvStory.adapter = adapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    adapter.retry()
+                }
+            )
         }
     }
 
@@ -123,12 +114,16 @@ class MainActivity : AppCompatActivity() {
 
         return when(item.itemId) {
             R.id.menu_logout -> {
-                mLoginPreference.logout()
-                //viewModel.logout()
+                //mLoginPreference.logout()
+                dataStoreViewModel.logout()
                 Log.d("tag", "token dihapus")
-                Log.d("tag", mLoginPreference.getUser().isLogin.toString())
+                //Log.d("tag", mLoginPreference.getUser().isLogin.toString())
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
+                true
+            }
+            R.id.menu_maps -> {
+                startActivity(Intent(this, MapsActivity::class.java))
                 true
             }
             else -> {return super.onOptionsItemSelected(item)}

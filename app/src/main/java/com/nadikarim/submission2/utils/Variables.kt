@@ -1,5 +1,10 @@
 package com.nadikarim.submission2.utils
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+
 const val BASE_URL = "https://story-api.dicoding.dev/v1/"
 const val RETROFIT_TAG = "Retrofit"
 const val SHARED_PREFERENCES = "shared_preferences"
