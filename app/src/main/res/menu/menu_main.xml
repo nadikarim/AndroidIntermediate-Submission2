@@ -11,6 +11,7 @@
     <item
         android:id="@+id/menu_logout"
         android:title="@string/logout"
+        android:icon="@drawable/ic_baseline_logout_24"
         app:showAsAction="always"/>
 
 

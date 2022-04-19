@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity() {
 
         setupViewModel()
         setRecyclerView()
-        validate()
         action()
     }
 
@@ -61,25 +60,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun validate() {
-        dataStoreViewModel.getSession().observe(this) {
-            if (!it.isLogin) {
-                TastyToasty.success(this, it.token).show()
-                Log.d("tag", it.token)
+
+    private fun setupViewModel() {
+        dataStoreViewModel.getSession().observe(this) { userSession ->
+            if (!userSession.isLogin) {
+                TastyToasty.success(this, "token tidak ada, login dulu yuk").show()
+                Log.d("tag", userSession.token)
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent,
                     ActivityOptionsCompat.makeSceneTransitionAnimation(this@MainActivity as Activity).toBundle()
                 )
                 finish()
             } else {
-                viewModel.story.observe(this) {
-                    adapter.submitData(lifecycle, it)
+                viewModel.story.observe(this) { story ->
+                    adapter.submitData(lifecycle, story)
                 }
             }
         }
-    }
-
-    private fun setupViewModel() {
 
         viewModel.story.observe(this) {
             adapter.submitData(lifecycle, it)

@@ -23,13 +23,4 @@ class LoginViewModel @Inject constructor(private val repository: StoryRepository
         repository.loginUser(email, password)
     }
 
-    /*
-    fun setSession(user: UserSession) {
-        viewModelScope.launch {
-            repository.setUser(user)
-        }
-    }
-
-     */
-
 }

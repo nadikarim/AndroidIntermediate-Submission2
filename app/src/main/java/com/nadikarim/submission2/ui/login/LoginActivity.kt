@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -22,8 +21,6 @@ import com.nadikarim.submission2.databinding.ActivityLoginBinding
 import com.nadikarim.submission2.ui.main.MainActivity
 import com.nadikarim.submission2.ui.register.RegisterActivity
 import com.nadikarim.submission2.utils.DataStoreViewModel
-import com.nadikarim.submission2.utils.LoginPreference
-import com.nadikarim.submission2.utils.SHARED_PREFERENCES
 import dagger.hilt.android.AndroidEntryPoint
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

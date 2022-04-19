@@ -8,11 +8,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -20,18 +20,25 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.nadikarim.submission2.R
 import com.nadikarim.submission2.databinding.ActivityMapsBinding
+import com.nadikarim.submission2.utils.DataStoreViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val dataStoreViewModel by viewModels<DataStoreViewModel>()
+    private val mapsViewModel by viewModels<MapsViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -53,6 +60,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+        showStartMarker()
         getMyLastLocation()
     }
 
@@ -87,9 +95,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         ){
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
-                    showStartMarker(location)
+                    showStartMarker()
                     Log.d("Tag", location.longitude.toString())
                     Log.d("Tag", location.latitude.toString())
+                    dataStoreViewModel.getSession().observe(this) {
+                        mapsViewModel.getAllStoryWithMaps(it.token)
+                    }
                 } else {
                     Toast.makeText(
                         this@MapsActivity,
@@ -108,13 +119,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun showStartMarker(location: Location) {
-        val startLocation = LatLng(location.latitude, location.longitude)
-        mMap.addMarker(
-            MarkerOptions()
-                .position(startLocation)
-                .title("Start Point")
-        )
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLocation, 17f))
+    private fun showStartMarker() {
+        dataStoreViewModel.getSession().observe(this) {
+            mapsViewModel.getAllStoryWithMaps(it.token)
+        }
+        mapsViewModel.listStory.observe(this) {
+            for (i in it.listIterator()) {
+                val locationPoint = LatLng(i.lat, i.lon)
+                mMap.addMarker(
+                    MarkerOptions()
+                        .position(locationPoint)
+                        .title(i.name)
+                        .snippet(i.description)
+                )
+            }
+
+        }
+
     }
 }

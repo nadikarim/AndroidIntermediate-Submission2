@@ -16,4 +16,8 @@ class AddStoryViewModel @Inject constructor(private val repository: StoryReposit
     fun addStory(token: String, imageMultipart: MultipartBody.Part, description: RequestBody) {
         repository.addStory(token, imageMultipart, description)
     }
+
+    fun addStory(token: String, imageMultipart: MultipartBody.Part, description: RequestBody, latitude: Float, longitude: Float) {
+        repository.postStoryWithLOcation(token, imageMultipart, description, latitude, longitude)
+    }
 }

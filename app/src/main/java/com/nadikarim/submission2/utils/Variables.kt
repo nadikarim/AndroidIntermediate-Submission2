@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 
-const val BASE_URL = "https://story-api.dicoding.dev/v1/"
+var BASE_URL = "https://story-api.dicoding.dev/v1/"
 const val RETROFIT_TAG = "Retrofit"
 const val SHARED_PREFERENCES = "shared_preferences"
 const val PREFS_NAME = "login"

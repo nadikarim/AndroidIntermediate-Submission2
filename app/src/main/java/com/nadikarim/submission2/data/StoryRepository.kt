@@ -38,12 +38,13 @@ class StoryRepository @Inject constructor(
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
-    private val _listStory = MutableLiveData<ArrayList<Story>>()
-    val listStory: LiveData<ArrayList<Story>> = _listStory
+    private val _listStory = MutableLiveData<List<Story>>()
+    val listStory: LiveData<List<Story>> = _listStory
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
-
+    private val _locationStory = MutableLiveData<Story>()
+    val locationStory: LiveData<Story> = _locationStory
 
 
     fun getStory(): LiveData<PagingData<Story>> {
@@ -58,19 +59,27 @@ class StoryRepository @Inject constructor(
     }
 
 
+    fun getStoryWithLocation(token: String) {
+        apiService.getListStoryWithLocation(token, 1)
+            .enqueue(object : Callback<StoriesResponse>{
+                override fun onResponse(
+                    call: Call<StoriesResponse>,
+                    response: Response<StoriesResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        _listStory.postValue(response.body()?.listStory)
+                    }
+                }
 
+                override fun onFailure(call: Call<StoriesResponse>, t: Throwable) {
+                    Log.d(RETROFIT_TAG, t.message.toString())
+                }
 
-    fun getSession(){
-        preference.getUser()
+            })
     }
 
-    suspend fun setUser(user: UserSession) {
-        preference.setUser(user)
-    }
 
-    suspend fun logout() {
-        preference.logout()
-    }
+
 
 
     /*
@@ -172,6 +181,27 @@ class StoryRepository @Inject constructor(
             }
 
         })
+    }
+
+    fun postStoryWithLOcation(token: String, imageMultipart: MultipartBody.Part, description: RequestBody, latitude: Float, longitude: Float) {
+        apiService.uploadImageWithLocation(token, imageMultipart, description, latitude, longitude)
+            .enqueue(object : Callback<AddResponse> {
+                override fun onResponse(call: Call<AddResponse>, response: Response<AddResponse>) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                        if (responseBody != null && !responseBody.error) {
+                            _toastMessage.value = responseBody.message
+                        } else {
+                            _toastMessage.value =  response.message()
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<AddResponse>, t: Throwable) {
+                    _toastMessage.value = "Gagal instance retrofit"
+                }
+
+            })
     }
 
 }
