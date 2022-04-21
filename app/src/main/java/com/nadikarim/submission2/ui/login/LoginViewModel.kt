@@ -19,8 +19,6 @@ class LoginViewModel @Inject constructor(private val repository: StoryRepository
 
     val isLoading: LiveData<Boolean> = repository.isLoading
 
-    fun loginUser(email: String, password: String) {
-        repository.loginUser(email, password)
-    }
+    fun loginUser(email: String, password: String) = repository.loginUser(email, password)
 
 }

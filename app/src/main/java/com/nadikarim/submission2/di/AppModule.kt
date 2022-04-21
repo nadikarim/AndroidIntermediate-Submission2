@@ -1,10 +1,7 @@
 package com.nadikarim.submission2.di
 
 import android.content.Context
-import androidx.room.Database
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.nadikarim.submission2.data.UserPreference
 import com.nadikarim.submission2.data.local.database.StoryDatabase
 import com.nadikarim.submission2.data.remote.ApiService
 import com.nadikarim.submission2.utils.BASE_URL
@@ -13,12 +10,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.first
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
+import java.util.concurrent.TimeUnit
 
 
 @Module
@@ -36,10 +32,16 @@ object AppModule {
     }
 
     @Provides
+    fun providesStoryDao(database: StoryDatabase) = database.storyDao()
+
+    @Provides
     fun provideRetrofit(): Retrofit {
         val loggingInterceptor =
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         val client = OkHttpClient.Builder()
+            .connectTimeout(2, TimeUnit.MINUTES)
+            .writeTimeout(2, TimeUnit.MINUTES)
+            .readTimeout(2, TimeUnit.MINUTES)
             .addInterceptor(loggingInterceptor)
             .build()
         return Retrofit.Builder()
@@ -51,7 +53,8 @@ object AppModule {
 
     @Provides
     fun provideApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
+        val api: ApiService by lazy { retrofit.create(ApiService::class.java) }
+        return api
     }
 
 

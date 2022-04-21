@@ -8,6 +8,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
+import com.nadikarim.submission2.data.local.database.StoryDao
 import com.nadikarim.submission2.data.local.database.StoryDatabase
 import com.nadikarim.submission2.data.model.UserSession
 import com.nadikarim.submission2.data.model.login.LoginResponse
@@ -18,6 +19,7 @@ import com.nadikarim.submission2.data.model.stories.StoriesResponse
 import com.nadikarim.submission2.data.model.stories.Story
 import com.nadikarim.submission2.data.remote.ApiService
 import com.nadikarim.submission2.utils.RETROFIT_TAG
+import com.nadikarim.submission2.utils.Resource
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -29,7 +31,8 @@ class StoryRepository @Inject constructor(
     private val storyDatabase: StoryDatabase,
     private val apiService: ApiService,
     private val preference: UserPreference,
-    private val storyPagingSource: StoryPagingSource
+    private val storyPagingSource: StoryPagingSource,
+    private val storyDao: StoryDao
     ) {
 
     private val _userLogin = MutableLiveData<LoginResult>()
@@ -43,8 +46,6 @@ class StoryRepository @Inject constructor(
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
-    private val _locationStory = MutableLiveData<Story>()
-    val locationStory: LiveData<Story> = _locationStory
 
 
     fun getStory(): LiveData<PagingData<Story>> {
@@ -77,6 +78,25 @@ class StoryRepository @Inject constructor(
 
             })
     }
+
+
+/*
+    fun getStoryWithLocation(token: String): Resource<StoriesResponse> {
+        return try {
+            val response = apiService.getListStoryWithLocation(token, 1)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    return@let Resource.success(it)
+                } ?: Resource.error("Unexpected", null)
+            } else {
+                Resource.error("Unexpected", null)
+            }
+        } catch (e: Exception) {
+            Resource.error("No Connection", null)
+        }
+    }
+
+ */
 
 
 
