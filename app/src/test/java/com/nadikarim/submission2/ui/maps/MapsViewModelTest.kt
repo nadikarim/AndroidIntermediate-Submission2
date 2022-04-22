@@ -7,9 +7,7 @@ import com.nadikarim.submission2.DataDummy
 import com.nadikarim.submission2.data.model.login.LoginResult
 import com.nadikarim.submission2.data.model.stories.Story
 import com.nadikarim.submission2.getOrAwaitValue
-import com.nadikarim.submission2.ui.register.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

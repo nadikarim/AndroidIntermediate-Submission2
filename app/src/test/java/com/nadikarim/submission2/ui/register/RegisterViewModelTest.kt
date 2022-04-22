@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.common.truth.Truth
 import com.nadikarim.submission2.data.model.login.LoginResult
 import com.nadikarim.submission2.getOrAwaitValue
-import com.nadikarim.submission2.ui.login.LoginViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

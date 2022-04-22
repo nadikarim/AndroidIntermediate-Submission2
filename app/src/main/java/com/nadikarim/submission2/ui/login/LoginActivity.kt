@@ -13,27 +13,18 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.nadikarim.submission2.data.model.UserSession
 import com.nadikarim.submission2.databinding.ActivityLoginBinding
 import com.nadikarim.submission2.ui.main.MainActivity
 import com.nadikarim.submission2.ui.register.RegisterActivity
 import com.nadikarim.submission2.utils.DataStoreViewModel
-import com.nadikarim.submission2.vo.Result
-import com.uk.tastytoasty.TastyToasty
 import dagger.hilt.android.AndroidEntryPoint
-
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModelViewModel by viewModels<LoginViewModel>()
     private val dataStoreViewModel by viewModels<DataStoreViewModel>()
-    //private lateinit var pref: SharedPreferences
-    //lateinit var userPref: LoginPreference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,20 +32,11 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.title = "Login"
 
-        //setupPreference()
         setupViewModel()
         action()
         playAnimation()
 
     }
-
-    /*
-    private fun setupPreference() {
-        pref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        userPref = LoginPreference(this)
-    }
-
-     */
 
     private fun setupViewModel() {
         viewModelViewModel.isLoading.observe(this) { showLoading(it) }
@@ -88,41 +70,6 @@ class LoginActivity : AppCompatActivity() {
                 binding.textInputLayout.error = "Masukkan password"
             }
             else -> {
-                /*
-                viewModelViewModel.login2(email, password).observe(this) {
-                    if (it != null) {
-                        when(it) {
-                            is Result.Loading -> {
-                                binding.progressBar.visibility = View.VISIBLE
-                            }
-                            is Result.Success -> {
-                                binding.progressBar.visibility = View.GONE
-                                AlertDialog.Builder(this).apply {
-                                    setTitle("berhasil login")
-                                    setMessage("Selamat Datang, ${it.data.loginResult.name}!")
-                                    setPositiveButton("Lanjut") { _, _ ->
-                                        val intent = Intent(context, MainActivity::class.java)
-                                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                        startActivity(intent,
-                                            ActivityOptionsCompat.makeSceneTransitionAnimation(this@LoginActivity as Activity).toBundle()
-                                        )
-                                        finish()
-                                    }
-                                    create()
-                                    show()
-                                }
-                                val login = it.data.loginResult
-                                savedSession(UserSession(login.name, login.token, login.userId, true))
-                            }
-                            is Result.Error -> {
-                                binding.progressBar.visibility = View.GONE
-                                TastyToasty.error(this@LoginActivity, "Error").show()
-                            }
-                        }
-                    }
-                }
-
-                 */
                 viewModelViewModel.loginUser(email, password)
 
                 viewModelViewModel.userLogin.observe(this) {
@@ -143,7 +90,6 @@ class LoginActivity : AppCompatActivity() {
                             show()
                         }
                         savedSession(UserSession(it.name, it.token, it.userId, true))
-                        //saveSession(UserSession(it.name, it.token, it.userId, true))
                     }
 
                 }
@@ -152,12 +98,6 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-
-    /*
-    private fun saveSession(user: UserSession) {
-        userPref.setUser(user)
-    }
-     */
 
     private fun savedSession(user: UserSession) {
         dataStoreViewModel.setSession(user)

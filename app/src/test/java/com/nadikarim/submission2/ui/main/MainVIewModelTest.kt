@@ -62,7 +62,7 @@ class MainVIewModelTest{
 
 }
 
-class PagedTestDataSources private constructor(private val items: List<Story>) :
+class PagedTestDataSources private constructor() :
     PagingSource<Int, LiveData<List<Story>>>() {
     companion object {
         fun snapshot(items: List<Story>): PagingData<Story> {

@@ -1,15 +1,11 @@
 package com.nadikarim.submission2.utils
 
-import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*

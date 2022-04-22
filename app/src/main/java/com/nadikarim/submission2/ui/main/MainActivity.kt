@@ -1,7 +1,6 @@
 package com.nadikarim.submission2.ui.main
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,9 +10,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nadikarim.submission2.R
 import com.nadikarim.submission2.data.ListAdapter
@@ -26,15 +22,12 @@ import com.nadikarim.submission2.utils.DataStoreViewModel
 import com.uk.tastytoasty.TastyToasty
 import dagger.hilt.android.AndroidEntryPoint
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainVIewModel>()
     private lateinit var binding: ActivityMainBinding
     private val dataStoreViewModel by viewModels<DataStoreViewModel>()
-    //private lateinit var mLoginPreference: LoginPreference
     private lateinit var adapter: ListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.title = "Home"
 
-        //mLoginPreference = LoginPreference(this)
         adapter = ListAdapter()
 
         setupViewModel()
@@ -72,22 +64,11 @@ class MainActivity : AppCompatActivity() {
                 )
                 finish()
             } else {
-                /*
-                viewModel.story.observe(this) { story ->
-                    adapter.submitData(lifecycle, story)
-                }
-                 */
                 viewModel.story.observe(this) {
                     adapter.submitData(lifecycle, it)
                 }
             }
         }
-        /*
-        viewModel.story.observe(this) {
-            adapter.submitData(lifecycle, it)
-        }
-
-         */
         viewModel.story.observe(this) {
             adapter.submitData(lifecycle, it)
         }

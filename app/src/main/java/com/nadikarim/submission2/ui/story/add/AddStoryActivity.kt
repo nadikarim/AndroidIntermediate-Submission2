@@ -4,34 +4,23 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.nadikarim.submission2.databinding.ActivityAddStoryBinding
 import com.nadikarim.submission2.ui.main.MainActivity
-import com.nadikarim.submission2.utils.*
+import com.nadikarim.submission2.utils.DataStoreViewModel
+import com.nadikarim.submission2.utils.createTempFile
+import com.nadikarim.submission2.utils.reduceFileImage
+import com.nadikarim.submission2.utils.uriToFile
 import com.uk.tastytoasty.TastyToasty
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 @AndroidEntryPoint
@@ -158,61 +147,4 @@ class AddStoryActivity : AppCompatActivity() {
             TastyToasty.error(this@AddStoryActivity, "Silahkan masukkan gambar terlebih dahulu.").show()
         }
     }
-
-
-
-    /*
-    private fun addStory() {
-
-        if (getFile != null) {
-            val file = reduceFileImage(getFile as File)
-            val descriptionText = binding.etAdd.text.toString()
-            val description = descriptionText.toRequestBody("text/plain".toMediaType())
-            val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                "photo",
-                file.name,
-                requestImageFile
-            )
-
-            if     (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
-                checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-            ){
-                fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        showStartMarker(location)
-                        Log.d("Tag", location.longitude.toString())
-                        Log.d("Tag", location.latitude.toString())
-
-                        dataStoreViewModel.getSession().observe(this) {
-                            viewModel.addStory("Bearer ${it.token}", imageMultipart, description, location.latitude.toFloat(), location.longitude.toFloat())
-                            viewModel.toastMessage.observe(this) { errorMessage ->
-                                TastyToasty.error(this@AddStoryActivity, errorMessage).show()
-                            }
-                        }
-
-                    } else {
-                        Toast.makeText(
-                            this@AddStoryActivity,
-                            "Location is not found. Try Again",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            } else {
-                requestPermissionLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-                )
-            }
-            //val token = "Bearer ${mLoginPreference.getUser().token}"
-
-        } else {
-            TastyToasty.success(this@AddStoryActivity, "Silahkan masukkan gambar terlebih dahulu.").show()
-        }
-    }
-
-     */
 }

@@ -3,7 +3,6 @@ package com.nadikarim.submission2.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import androidx.paging.*
 import com.nadikarim.submission2.data.local.database.StoryDatabase
 import com.nadikarim.submission2.data.model.login.LoginResponse
@@ -15,7 +14,6 @@ import com.nadikarim.submission2.data.model.stories.Story
 import com.nadikarim.submission2.data.remote.ApiService
 import com.nadikarim.submission2.utils.RETROFIT_TAG
 import com.nadikarim.submission2.utils.wrapEspressoIdlingResource
-import com.nadikarim.submission2.vo.Result
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -31,8 +29,7 @@ import javax.inject.Inject
 class StoryRepository @Inject constructor(
     private val storyDatabase: StoryDatabase,
     private val apiService: ApiService,
-    private val preference: UserPreference,
-    //private val storyPagingSource: StoryPagingSource
+    private val preference: UserPreference
     ) {
 
     private val _userLogin = MutableLiveData<LoginResult>()
@@ -91,71 +88,6 @@ class StoryRepository @Inject constructor(
 
     }
 
-    /*
-    fun getStoryWithLocation2(token: String): MutableLiveData<Result<StoriesResponse>> = liveData {
-        emit(Result.Loading)
-        val loginResponse = MutableLiveData<LoginResponse>()
-        try {
-            val response =apiService.getListStoryWithLocation2(token, 1)
-            val locations = response.listStory
-            emit(Result.Success(response))
-        } catch (e: Exception) {
-            Log.d("tag", e.message.toString())
-            emit(Result.Error(e.message.toString())
-        }
-    }
-
-     */
-
-
-/*
-    fun getStoryWithLocation(token: String): Resource<StoriesResponse> {
-        return try {
-            val response = apiService.getListStoryWithLocation(token, 1)
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    return@let Resource.success(it)
-                } ?: Resource.error("Unexpected", null)
-            } else {
-                Resource.error("Unexpected", null)
-            }
-        } catch (e: Exception) {
-            Resource.error("No Connection", null)
-        }
-    }
-
- */
-
-
-
-
-
-    /*
-    fun getStory(auth: String) {
-        _isLoading.value = true
-        apiService.getListStory("Bearer $auth").enqueue(object : Callback<StoriesResponse>{
-            override fun onResponse(
-                call: Call<StoriesResponse>,
-                response: Response<StoriesResponse>
-            ) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    _listStory.postValue(response.body()?.listStory)
-                    Log.d(RETROFIT_TAG, response.body()?.listStory.toString())
-                }
-
-            }
-
-            override fun onFailure(call: Call<StoriesResponse>, t: Throwable) {
-                _isLoading.value = false
-                Log.d(RETROFIT_TAG, t.message.toString())
-            }
-
-        })
-    }
-
-     */
-
 
     /**
      *
@@ -197,26 +129,11 @@ class StoryRepository @Inject constructor(
 
     }
 
-
-
-    fun loginUser2(email: String, password: String) : LiveData<Result<LoginResponse>> = liveData {
-        wrapEspressoIdlingResource {
-            emit(Result.Loading)
-            try {
-                val response = apiService.loginUser2(email, password)
-                emit(Result.Success(response))
-            } catch (e: Exception) {
-                Log.d("tag", e.message.toString())
-                emit(Result.Error(e.message.toString()))
-            }
-        }
-
-    }
-
-
-
-
-
+    /**
+     *
+     * ***Ini buat register***
+     *
+     */
 
 
     fun registerUser(name: String, email: String,password: String) {

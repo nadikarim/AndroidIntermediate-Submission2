@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.ListUpdateCallback
 import com.google.common.truth.Truth.assertThat
 import com.nadikarim.submission2.DataDummy
 import com.nadikarim.submission2.MainCoroutineRule
-import com.nadikarim.submission2.data.model.login.LoginResponse
 import com.nadikarim.submission2.data.model.login.LoginResult
 import com.nadikarim.submission2.data.model.stories.Story
 import com.nadikarim.submission2.getOrAwaitValue
@@ -21,8 +20,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 
@@ -110,7 +109,7 @@ class StoryRepositoryTest {
         val data = PagedTestDataSources.snapshot(dummyStory)
         val story = MutableLiveData<PagingData<Story>>()
         story.value = data
-        Mockito.`when`(storyRepository.getStory()).thenReturn(story)
+        `when`(storyRepository.getStory()).thenReturn(story)
         val actualData = storyRepository.getStory().getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
@@ -122,7 +121,7 @@ class StoryRepositoryTest {
         differ.submitData(actualData)
 
         advanceUntilIdle()
-        Mockito.verify(storyRepository).getStory()
+        verify(storyRepository).getStory()
         assertThat(differ.snapshot()).isNotNull()
         assertThat(dummyStory.size).isEqualTo(differ.snapshot().size)
         assertThat(dummyStory[0].name).isEqualTo(differ.snapshot()[0]?.name)

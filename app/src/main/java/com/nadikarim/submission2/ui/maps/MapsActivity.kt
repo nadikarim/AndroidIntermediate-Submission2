@@ -2,17 +2,13 @@ package com.nadikarim.submission2.ui.maps
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -94,22 +90,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
         ){
             showStartMarker()
-//            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-//                if (location != null) {
-//                    showStartMarker()
-//                    Log.d("Tag", location.longitude.toString())
-//                    Log.d("Tag", location.latitude.toString())
-//                    dataStoreViewModel.getSession().observe(this) {
-//                        mapsViewModel.getAllStoryWithMaps(it.token)
-//                    }
-//                } else {
-//                    Toast.makeText(
-//                        this@MapsActivity,
-//                        "Location is not found. Try Again",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            }
         } else {
             requestPermissionLauncher.launch(
                 arrayOf(

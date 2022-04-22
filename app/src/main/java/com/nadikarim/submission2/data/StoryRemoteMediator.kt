@@ -49,7 +49,7 @@ class StoryRemoteMediator @Inject constructor(
 
         try {
             val token: String = userPreference.getUser().first().token
-            val responseData = apiService.getListStory2("Bearer $token", page, state.config.pageSize).listStory
+            val responseData = apiService.getListStory("Bearer $token", page, state.config.pageSize).listStory
 
             val endOfPaginationReached = responseData.isEmpty()
             database.withTransaction {

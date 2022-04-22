@@ -3,10 +3,8 @@ package com.nadikarim.submission2.ui.story.add
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.google.common.truth.Truth
-import com.nadikarim.submission2.data.StoryRepository
 import com.nadikarim.submission2.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -4,31 +4,16 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.google.common.truth.Truth
 import com.nadikarim.submission2.DataDummy
-import com.nadikarim.submission2.MainCoroutineRule
-import com.nadikarim.submission2.data.StoryRepository
-import com.nadikarim.submission2.data.model.login.LoginRequest
-import com.nadikarim.submission2.data.model.login.LoginResponse
 import com.nadikarim.submission2.data.model.login.LoginResult
 import com.nadikarim.submission2.data.model.stories.Story
-import com.nadikarim.submission2.data.remote.ApiService
 import com.nadikarim.submission2.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import okhttp3.OkHttpClient
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import strikt.api.expectThat
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -91,9 +76,9 @@ class LoginViewModelTest {
         val expectedData = MutableLiveData<List<Story>>()
         expectedData.value = listStoryDummy
 
-        viewModel.login2(email, password)
+        viewModel.loginUser(email, password)
 
-        Mockito.verify(viewModel).login2(email, password)
+        Mockito.verify(viewModel).loginUser(email, password)
     }
 
 }
