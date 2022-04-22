@@ -29,7 +29,7 @@ class MapsViewModelTest {
     private lateinit var viewModel: MapsViewModel
 
     @Test
-    fun `kalo variabel listStory jalan`() {
+    fun `when listStory should return the right data`() {
         val listStoryDummy = DataDummy.generateDummyStoryResponse()
         val expectedData = MutableLiveData<List<Story>>()
         expectedData.value = listStoryDummy
@@ -44,7 +44,7 @@ class MapsViewModelTest {
 
 
     @Test
-    fun `kalo fungsi getAllStoryWithMaps jalan`() {
+    fun `verify the getAllStoryWithMaps function is works`() {
         val token = "string"
         val loginREsult = LoginResult("asd", "asd", "asd")
         val expectedData = MutableLiveData<LoginResult>()

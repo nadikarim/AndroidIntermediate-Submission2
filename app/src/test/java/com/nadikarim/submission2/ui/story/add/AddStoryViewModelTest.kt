@@ -28,7 +28,7 @@ class AddStoryViewModelTest {
     private lateinit var mockFile: File
 
     @Test
-    fun `kalo fungsi addStory jalan`() {
+    fun `verify the addStory function is works`() {
         val token = "token"
         val expectedData = MutableLiveData<String>()
         expectedData.value = "listStoryDummy"
@@ -46,7 +46,7 @@ class AddStoryViewModelTest {
     }
 
     @Test
-    fun `kalo variable toast jalan`() {
+    fun `when toast message should return the right data`() {
         val expectedData = MutableLiveData<String>()
         expectedData.value = "true"
 

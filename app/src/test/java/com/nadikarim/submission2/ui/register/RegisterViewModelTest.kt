@@ -27,7 +27,7 @@ class RegisterViewModelTest {
     private lateinit var viewModel: RegisterViewModel
 
     @Test
-    fun `kalo variabel loading jalan`() {
+    fun `when loading value should return the right data`() {
         val expectedData = MutableLiveData<Boolean>()
         expectedData.value = true
 
@@ -41,7 +41,7 @@ class RegisterViewModelTest {
 
 
     @Test
-    fun `kalo fungsi login jalan`() {
+    fun `verify the register function is works`() {
         val name = "name"
         val email = "asd"
         val password = "asd"

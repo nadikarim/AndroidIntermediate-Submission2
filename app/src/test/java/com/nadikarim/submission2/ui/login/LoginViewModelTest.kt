@@ -43,7 +43,7 @@ class LoginViewModelTest {
 
 
     @Test
-    fun `kalo variabel userLogin jalan`() {
+    fun `when userLogin variable should return the right data`() {
 
         val loginREsult = LoginResult("asd", "asd", "asd")
         val expectedData = MutableLiveData<LoginResult>()
@@ -58,7 +58,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `kalo variable loding jalan`() {
+    fun `when loading value should return the right data`() {
         val expectedData = MutableLiveData<Boolean>()
         expectedData.value = true
 
@@ -71,7 +71,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `kalo variable toast jalan`() {
+    fun `when toast message should return the right data`() {
         val expectedData = MutableLiveData<String>()
         expectedData.value = "true"
 
@@ -84,7 +84,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `kalo fungsi login jalan`() {
+    fun `verify the login function is works`() {
         val email = "asd"
         val password = "asd"
         val listStoryDummy = DataDummy.generateDummyStoryResponse()
