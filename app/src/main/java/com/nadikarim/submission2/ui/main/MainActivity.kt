@@ -72,12 +72,22 @@ class MainActivity : AppCompatActivity() {
                 )
                 finish()
             } else {
+                /*
                 viewModel.story.observe(this) { story ->
                     adapter.submitData(lifecycle, story)
                 }
+                 */
+                viewModel.story.observe(this) {
+                    adapter.submitData(lifecycle, it)
+                }
             }
         }
+        /*
+        viewModel.story.observe(this) {
+            adapter.submitData(lifecycle, it)
+        }
 
+         */
         viewModel.story.observe(this) {
             adapter.submitData(lifecycle, it)
         }

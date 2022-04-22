@@ -1,18 +1,18 @@
 package com.nadikarim.submission2.data.local.database
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.nadikarim.submission2.data.local.entity.RemoteKeys
 import com.nadikarim.submission2.data.model.stories.Story
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Database(
-    entities = [Story::class],
-    version = 1,
+    entities = [Story::class, RemoteKeys::class],
+    version = 2,
     exportSchema = false
 )
-abstract class StoryDatabase() : RoomDatabase(){
+abstract class StoryDatabase : RoomDatabase(){
 
     abstract fun storyDao(): StoryDao
+
+    abstract fun remoteKeysDao(): RemoteKeysDao
 }

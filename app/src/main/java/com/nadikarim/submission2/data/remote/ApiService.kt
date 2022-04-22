@@ -27,12 +27,26 @@ interface ApiService {
         @Field("password")password: String
     ): Call<LoginResponse>
 
+    @FormUrlEncoded
+    @POST("login")
+    fun loginUser2(
+        @Field("email") email: String,
+        @Field("password")password: String
+    ): LoginResponse
+
     @GET("stories")
     suspend fun getListStory(
         @Header("Authorization") auth: String,
         @Query("page")page: Int,
         @Query("size")size: Int
     ): Response<StoriesResponse>
+
+    @GET("stories")
+    suspend fun getListStory2(
+        @Header("Authorization") auth: String,
+        @Query("page")page: Int,
+        @Query("size")size: Int
+    ): StoriesResponse
 
     @Multipart
     @POST("stories")
@@ -47,6 +61,12 @@ interface ApiService {
         @Header("Authorization") auth: String,
         @Query("location")location: Int
     ): Call<StoriesResponse>
+
+    @GET("stories")
+    fun getListStoryWithLocation2(
+        @Header("Authorization") auth: String,
+        @Query("location")location: Int
+    ): StoriesResponse
 
     @Multipart
     @POST("stories")

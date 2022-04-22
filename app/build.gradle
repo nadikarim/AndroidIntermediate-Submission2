@@ -32,6 +32,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
     }
     buildFeatures {
         viewBinding true
@@ -39,6 +40,11 @@ android {
 
     viewBinding {
         enabled = true
+    }
+
+    sourceSets {
+        androidTest.java.srcDirs += "src/sharedTest/java"
+        test.java.srcDirs += "src/sharedTest/java"
     }
 }
 
@@ -54,8 +60,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     //Maps
-    implementation 'com.google.android.gms:play-services-maps:18.0.0'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 
     //Datastore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
@@ -89,14 +95,15 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     //Room
-    implementation 'androidx.room:room-ktx:2.4.0-rc01'
-    kapt 'androidx.room:room-compiler:2.4.0-rc01'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+    implementation 'androidx.room:room-ktx:2.5.0-alpha01'
+    kapt 'androidx.room:room-compiler:2.5.0-alpha01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
     implementation 'androidx.activity:activity-ktx:1.4.0'
 
     //Paging
-    implementation "androidx.paging:paging-runtime-ktx:3.1.0"
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
+    implementation 'androidx.room:room-paging:2.5.0-alpha01'
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.41"
@@ -109,8 +116,20 @@ dependencies {
     //special testing
     testImplementation "androidx.arch.core:core-testing:2.1.0" // InstantTaskExecutorRule
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2" //TestCoroutineDispatcher
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    testImplementation 'org.mockito:mockito-inline:3.12.4'
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
+    testImplementation("io.strikt:strikt-core:0.31.0")
+
+    //truth
+    testImplementation "com.google.truth:truth:1.0.1"
+    androidTestImplementation "com.google.truth:truth:1.0.1"
 
     //special instrumentation testing
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0" // InstantTaskExecutorRule
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2" //TestCoroutineDispatcher
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
+    androidTestImplementation("io.strikt:strikt-core:0.31.0")
+
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
 }

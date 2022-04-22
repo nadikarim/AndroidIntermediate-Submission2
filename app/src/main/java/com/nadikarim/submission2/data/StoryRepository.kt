@@ -3,14 +3,9 @@ package com.nadikarim.submission2.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.liveData
-import com.nadikarim.submission2.data.local.database.StoryDao
+import androidx.lifecycle.liveData
+import androidx.paging.*
 import com.nadikarim.submission2.data.local.database.StoryDatabase
-import com.nadikarim.submission2.data.model.UserSession
 import com.nadikarim.submission2.data.model.login.LoginResponse
 import com.nadikarim.submission2.data.model.login.LoginResult
 import com.nadikarim.submission2.data.model.login.RegisterResponse
@@ -19,20 +14,25 @@ import com.nadikarim.submission2.data.model.stories.StoriesResponse
 import com.nadikarim.submission2.data.model.stories.Story
 import com.nadikarim.submission2.data.remote.ApiService
 import com.nadikarim.submission2.utils.RETROFIT_TAG
-import com.nadikarim.submission2.utils.Resource
+import com.nadikarim.submission2.utils.wrapEspressoIdlingResource
+import com.nadikarim.submission2.vo.Result
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 import javax.inject.Inject
 
 class StoryRepository @Inject constructor(
     private val storyDatabase: StoryDatabase,
     private val apiService: ApiService,
     private val preference: UserPreference,
-    private val storyPagingSource: StoryPagingSource,
-    private val storyDao: StoryDao
+    //private val storyPagingSource: StoryPagingSource
     ) {
 
     private val _userLogin = MutableLiveData<LoginResult>()
@@ -48,13 +48,22 @@ class StoryRepository @Inject constructor(
     val isLoading: LiveData<Boolean> = _isLoading
 
 
+    /**
+     *
+     * Ini buat nampilin list
+     *
+     */
+
+
+    @OptIn(ExperimentalPagingApi::class)
     fun getStory(): LiveData<PagingData<Story>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 5
             ),
+            remoteMediator = StoryRemoteMediator(storyDatabase,apiService, preference),
             pagingSourceFactory = {
-                storyPagingSource
+                storyDatabase.storyDao().getAllStory()
             }
         ).liveData
     }
@@ -78,6 +87,22 @@ class StoryRepository @Inject constructor(
 
             })
     }
+
+    /*
+    fun getStoryWithLocation2(token: String): MutableLiveData<Result<StoriesResponse>> = liveData {
+        emit(Result.Loading)
+        val loginResponse = MutableLiveData<LoginResponse>()
+        try {
+            val response =apiService.getListStoryWithLocation2(token, 1)
+            val locations = response.listStory
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            Log.d("tag", e.message.toString())
+            emit(Result.Error(e.message.toString())
+        }
+    }
+
+     */
 
 
 /*
@@ -129,6 +154,12 @@ class StoryRepository @Inject constructor(
      */
 
 
+    /**
+     *
+     * ***Ini buat login***
+     *
+     */
+
 
     fun loginUser(email: String, password: String) {
         _isLoading.value = true
@@ -160,6 +191,28 @@ class StoryRepository @Inject constructor(
             })
     }
 
+
+
+    fun loginUser2(email: String, password: String) : LiveData<Result<LoginResponse>> = liveData {
+        wrapEspressoIdlingResource {
+            emit(Result.Loading)
+            try {
+                val response = apiService.loginUser2(email, password)
+                emit(Result.Success(response))
+            } catch (e: Exception) {
+                Log.d("tag", e.message.toString())
+                emit(Result.Error(e.message.toString()))
+            }
+        }
+
+    }
+
+
+
+
+
+
+
     fun registerUser(name: String, email: String,password: String) {
         _isLoading.value = true
         apiService.registerUser(name, email, password)
@@ -182,8 +235,15 @@ class StoryRepository @Inject constructor(
             })
     }
 
-    fun addStory(token: String, imageMultipart: MultipartBody.Part, description: RequestBody){
-        val service = apiService.uploadImage(token, imageMultipart, description)
+    fun addStory(token: String, photo: File, description: String){
+        val descriptionText = description.toRequestBody("text/plain".toMediaType())
+        val requestImageFile = photo.asRequestBody("image/jpeg".toMediaTypeOrNull())
+        val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+            "photo",
+            photo.name,
+            requestImageFile
+        )
+        val service = apiService.uploadImage(token, imageMultipart, descriptionText)
         service.enqueue(object : Callback<AddResponse> {
             override fun onResponse(call: Call<AddResponse>, response: Response<AddResponse>) {
                 if (response.isSuccessful) {

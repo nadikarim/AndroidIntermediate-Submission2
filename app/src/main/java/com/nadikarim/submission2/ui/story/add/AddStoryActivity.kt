@@ -82,9 +82,8 @@ class AddStoryActivity : AppCompatActivity() {
         binding.btnUpload.setOnClickListener {
             addStory()
             val intent = Intent(this, MainActivity::class.java)
-            //intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
-
             finish()
         }
 
@@ -147,23 +146,16 @@ class AddStoryActivity : AppCompatActivity() {
         if (getFile != null) {
             val file = reduceFileImage(getFile as File)
             val descriptionText = binding.etAdd.text.toString()
-            val description = descriptionText.toRequestBody("text/plain".toMediaType())
-            val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                "photo",
-                file.name,
-                requestImageFile
-            )
 
             dataStoreViewModel.getSession().observe(this) {
-                viewModel.addStory("Bearer ${it.token}", imageMultipart, description)
+                viewModel.addStory("Bearer ${it.token}", file, descriptionText)
                 viewModel.toastMessage.observe(this) { errorMessage ->
-                    TastyToasty.error(this@AddStoryActivity, errorMessage).show()
+                    TastyToasty.success(this@AddStoryActivity, errorMessage).show()
                 }
             }
 
         } else {
-            TastyToasty.success(this@AddStoryActivity, "Silahkan masukkan gambar terlebih dahulu.").show()
+            TastyToasty.error(this@AddStoryActivity, "Silahkan masukkan gambar terlebih dahulu.").show()
         }
     }
 

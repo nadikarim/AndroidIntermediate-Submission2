@@ -21,4 +21,6 @@ class LoginViewModel @Inject constructor(private val repository: StoryRepository
 
     fun loginUser(email: String, password: String) = repository.loginUser(email, password)
 
+    fun login2(email: String, password: String) = repository.loginUser2(email, password)
+
 }

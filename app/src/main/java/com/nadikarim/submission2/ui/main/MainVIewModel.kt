@@ -11,10 +11,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainVIewModel @Inject constructor(repository: StoryRepository) : ViewModel(){
 
-    val listStory: LiveData<List<Story>> = repository.listStory
     val isLoading: LiveData<Boolean> = repository.isLoading
 
     val story: LiveData<PagingData<Story>> = repository.getStory().cachedIn(viewModelScope)
-
 
 }

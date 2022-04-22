@@ -25,11 +25,19 @@ class FakeApiService : ApiService {
         TODO("Not yet implemented")
     }
 
+    override fun loginUser2(email: String, password: String): LoginResponse {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getListStory(
         auth: String,
         page: Int,
         size: Int
     ): Response<StoriesResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getListStory2(auth: String, page: Int, size: Int): StoriesResponse {
         TODO("Not yet implemented")
     }
 
@@ -41,7 +49,11 @@ class FakeApiService : ApiService {
         TODO("Not yet implemented")
     }
 
-    override fun getListStoryWithLocation(auth: String, location: Int): Response<StoriesResponse> {
+    override fun getListStoryWithLocation(auth: String, location: Int): Call<StoriesResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getListStoryWithLocation2(auth: String, location: Int): StoriesResponse {
         TODO("Not yet implemented")
     }
 

@@ -35,6 +35,7 @@ class StoryPagingSource @Inject constructor(private val userPreference: UserPref
                     )
 
                 } else {
+                    Log.d("tag", "ini catch")
                     return LoadResult.Error(Exception("Maaf gabisa"))
                 }
 

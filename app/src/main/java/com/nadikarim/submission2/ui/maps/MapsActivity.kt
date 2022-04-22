@@ -93,22 +93,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if     (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
             checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
         ){
-            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                if (location != null) {
-                    showStartMarker()
-                    Log.d("Tag", location.longitude.toString())
-                    Log.d("Tag", location.latitude.toString())
-                    dataStoreViewModel.getSession().observe(this) {
-                        mapsViewModel.getAllStoryWithMaps(it.token)
-                    }
-                } else {
-                    Toast.makeText(
-                        this@MapsActivity,
-                        "Location is not found. Try Again",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
+            showStartMarker()
+//            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+//                if (location != null) {
+//                    showStartMarker()
+//                    Log.d("Tag", location.longitude.toString())
+//                    Log.d("Tag", location.latitude.toString())
+//                    dataStoreViewModel.getSession().observe(this) {
+//                        mapsViewModel.getAllStoryWithMaps(it.token)
+//                    }
+//                } else {
+//                    Toast.makeText(
+//                        this@MapsActivity,
+//                        "Location is not found. Try Again",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            }
         } else {
             requestPermissionLauncher.launch(
                 arrayOf(
